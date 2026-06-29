@@ -148,7 +148,15 @@ function displayTasks() {
 
         deleteBtn.addEventListener("click", () => {
 
-            markPending(task.id);
+            if (currentFilter === "completed") {
+
+                deleteTask(task.id);
+
+            } else {
+
+                markPending(task.id);
+
+            }
 
         });
         
@@ -217,7 +225,16 @@ function saveTasks() {
 
 }
 
+//Delete Tasks
+function deleteTask(id) {
 
+    tasks = tasks.filter(task => task.id !== id);
+
+    saveTasks();
+
+    displayTasks();
+
+}
 // Filter Tasks
 
 filterButtons.forEach(button => {
