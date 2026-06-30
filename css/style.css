@@ -316,7 +316,29 @@ header h1{
     transition:0.3s;
 
 }
+.pending-btn{
 
+    border:none;
+
+    background:#ff9800;
+
+    color:white;
+
+    padding:8px 12px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+}
+
+.pending-btn:hover{
+
+    background:#f57c00;
+
+}
 .complete-btn:hover{
 
     background:#218838;
