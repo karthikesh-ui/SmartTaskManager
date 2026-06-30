@@ -1,4 +1,6 @@
+// ===============================
 // Selecting HTML Elements
+// ===============================
 
 const taskInput = document.getElementById("taskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
@@ -7,12 +9,16 @@ const emptyMessage = document.getElementById("emptyMessage");
 const quote = document.getElementById("quote");
 const filterButtons = document.querySelectorAll(".filter-btn");
 
+// ===============================
 // Store Tasks
+// ===============================
 
 let tasks = [];
 let currentFilter = "all";
 
-// Load Tasks from Local Storage
+// ===============================
+// Load Tasks
+// ===============================
 
 window.onload = () => {
 
@@ -27,7 +33,9 @@ window.onload = () => {
     displayTasks();
 };
 
+// ===============================
 // Add Task
+// ===============================
 
 addTaskBtn.addEventListener("click", addTask);
 
@@ -48,6 +56,7 @@ function addTask() {
         alert("Please enter a task.");
 
         return;
+
     }
 
     const task = {
@@ -72,15 +81,23 @@ function addTask() {
 
 }
 
+// ===============================
 // Display Tasks
+// ===============================
 
 function displayTasks() {
 
     taskList.innerHTML = "";
 
-    let filteredTasks = tasks;
+    let filteredTasks = [];
 
-    if (currentFilter === "pending") {
+    if (currentFilter === "all") {
+
+        filteredTasks = tasks;
+
+    }
+
+    else if (currentFilter === "pending") {
 
         filteredTasks = tasks.filter(task => !task.completed);
 
@@ -105,68 +122,98 @@ function displayTasks() {
     filteredTasks.forEach(task => {
 
         const li = document.createElement("li");
-
         li.className = "task";
 
+        // Task Text
+
         const taskText = document.createElement("span");
-
         taskText.className = "task-text";
-
         taskText.textContent = task.text;
 
         if (task.completed) {
-
             taskText.classList.add("completed");
-
         }
 
-        const buttonContainer = document.createElement("div");
+        // Buttons Container
 
+        const buttonContainer = document.createElement("div");
         buttonContainer.className = "task-buttons";
 
+        // ==========================
         // Complete Button
+        // ==========================
 
         const completeBtn = document.createElement("button");
 
         completeBtn.className = "complete-btn";
 
-        completeBtn.textContent = "✔";
+        completeBtn.innerHTML = "✔";
+
+        completeBtn.title = "Mark as Completed";
 
         completeBtn.addEventListener("click", () => {
 
-            toggleComplete(task.id);
+            completeTask(task.id);
 
         });
 
+        // ==========================
         // Pending Button
+        // ==========================
+
+        const pendingBtn = document.createElement("button");
+
+        pendingBtn.className = "pending-btn";
+
+        pendingBtn.innerHTML = "✖";
+
+        pendingBtn.title = "Move to Pending";
+
+        pendingBtn.addEventListener("click", () => {
+
+            markPending(task.id);
+
+        });
+
+        // ==========================
+        // Delete Button
+        // ==========================
 
         const deleteBtn = document.createElement("button");
 
         deleteBtn.className = "delete-btn";
 
-        deleteBtn.textContent = "✖";
+        deleteBtn.innerHTML = "🗑";
+
+        deleteBtn.title = "Delete Task";
 
         deleteBtn.addEventListener("click", () => {
 
-            if (currentFilter === "completed") {
-
-                deleteTask(task.id);
-
-            } else {
-
-                markPending(task.id);
-
-            }
+            deleteTask(task.id);
 
         });
-        
+
+        // Disable unnecessary buttons
+
+        if (task.completed) {
+
+            completeBtn.disabled = true;
+            completeBtn.style.opacity = "0.5";
+            completeBtn.style.cursor = "not-allowed";
+
+        } else {
+
+            pendingBtn.disabled = true;
+            pendingBtn.style.opacity = "0.5";
+            pendingBtn.style.cursor = "not-allowed";
+
+        }
 
         buttonContainer.appendChild(completeBtn);
-
+        buttonContainer.appendChild(pendingBtn);
         buttonContainer.appendChild(deleteBtn);
 
         li.appendChild(taskText);
-
         li.appendChild(buttonContainer);
 
         taskList.appendChild(li);
@@ -175,15 +222,17 @@ function displayTasks() {
 
 }
 
+// ===============================
 // Complete Task
+// ===============================
 
-function toggleComplete(id) {
+function completeTask(id) {
 
     tasks = tasks.map(task => {
 
         if (task.id === id) {
 
-            task.completed = !task.completed;
+            task.completed = true;
 
         }
 
@@ -196,6 +245,10 @@ function toggleComplete(id) {
     displayTasks();
 
 }
+
+// ===============================
+// Move Task to Pending
+// ===============================
 
 function markPending(id) {
 
@@ -217,15 +270,10 @@ function markPending(id) {
 
 }
 
-// Save Tasks
+// ===============================
+// Delete Task
+// ===============================
 
-function saveTasks() {
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-
-}
-
-//Delete Tasks
 function deleteTask(id) {
 
     tasks = tasks.filter(task => task.id !== id);
@@ -235,7 +283,20 @@ function deleteTask(id) {
     displayTasks();
 
 }
+
+// ===============================
+// Save Tasks
+// ===============================
+
+function saveTasks() {
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+}
+
+// ===============================
 // Filter Tasks
+// ===============================
 
 filterButtons.forEach(button => {
 
@@ -257,7 +318,9 @@ filterButtons.forEach(button => {
 
 });
 
+// ===============================
 // Fetch Motivational Quote
+// ===============================
 
 async function fetchQuote() {
 
@@ -273,7 +336,7 @@ async function fetchQuote() {
 
     catch (error) {
 
-        quote.textContent = '"Believe in yourself and keep moving forward."';
+        quote.textContent = `"Believe in yourself and keep moving forward."`;
 
     }
 
